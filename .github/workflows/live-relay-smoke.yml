@@ -12,14 +12,27 @@ jobs:
     timeout-minutes: 5
     env:
       BASE_URL: https://actionpage-origin-probe.pages.dev
-      BUILD_SHA256: be5bd5328f79a37027d830686f765a887ec92955d4ecaa74470ba4d529e95381
+      BUILD_SHA256: e1d6846827f1b60c1cb22d77e1e1e1c53ae1200e4a86192e5ef01779d6904887
     steps:
-      - name: Fetch the machine entry point
+      - name: Validate the HTML action entry point
         run: |
           set -euo pipefail
           curl --fail-with-body --silent --show-error \
             --dump-header root.headers \
-            "$BASE_URL/" > root.json
+            "$BASE_URL/" > root.html
+          grep -Eiq '^content-type:.*text/html' root.headers
+          grep -Fq \
+            'href="https://actionpage-origin-probe.pages.dev/r/mgm-forecast?location=Bodrum"' \
+            root.html
+          grep -Fq '<pre id="ap-portable">' root.html
+          grep -Eiq '^cache-control:.*no-store' root.headers
+
+      - name: Fetch the JSON machine entry point
+        run: |
+          set -euo pipefail
+          curl --fail-with-body --silent --show-error \
+            --dump-header actions.headers \
+            "$BASE_URL/actions.json" > actions.json
           jq -e '
             .state == "choice" and
             (.actions | length) == 1 and
@@ -29,8 +42,9 @@ jobs:
               "hosting_egress_quarantined" and
             .generic_proxy == false and
             .caller_chosen_egress == false
-          ' root.json
-          grep -Eiq '^cache-control:.*no-store' root.headers
+          ' actions.json
+          grep -Eiq '^content-type:.*application/json' actions.headers
+          grep -Eiq '^cache-control:.*no-store' actions.headers
 
       - name: Confirm the Resmi Gazete carrier quarantine
         continue-on-error: true

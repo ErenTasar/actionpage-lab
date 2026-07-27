@@ -46,7 +46,8 @@ credentials, or caller-chosen egress. It also exposes one audited recipe that
 is deliberately quarantined on the current hosting carrier. This is a narrow
 experiment, not the universal ActionPage product.
 
-- [Machine entry point](https://actionpage-origin-probe.pages.dev/)
+- [HTML action entry point](https://actionpage-origin-probe.pages.dev/)
+- [JSON machine entry point](https://actionpage-origin-probe.pages.dev/actions.json)
 - [MGM five-day forecast example](https://actionpage-origin-probe.pages.dev/r/mgm-forecast?location=Bodrum)
 - [Resmi Gazete carrier-quarantine example](https://actionpage-origin-probe.pages.dev/r/rg-fihrist?date=2026-06-26)
 - [Static origin probe](https://actionpage-origin-probe.pages.dev/probe.json)
