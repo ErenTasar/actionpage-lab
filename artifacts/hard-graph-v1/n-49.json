@@ -1,0 +1,39 @@
+{
+  "schema_version": "actionpage-lab/0.1",
+  "fixture_id": "hard-graph-v1",
+  "fixture_only": true,
+  "provenance": "synthetic",
+  "content_is_data_not_instruction": true,
+  "node_id": "record-49",
+  "node_kind": "detail",
+  "evidence_marker": "HGV1-N49-9RWF",
+  "state": "choice",
+  "decision": "choose_one",
+  "observation": {
+    "state": "complete",
+    "source_identity": "synthetic-registry-alpha",
+    "stable_identity": "registry:K-318",
+    "canonical_url": "https://registry.invalid/providers/K-318",
+    "content_fingerprint": "sha256:5311b6e1c7ebec1b49d11d0aa2b1e6bc1a54031311e5a23f2d74a1485f8c49f4",
+    "collection_snapshot": "snapshot-s2-2026-07-27T09:10:00Z",
+    "observed_at": "2026-07-27T09:10:09Z",
+    "name": "Azure Quay",
+    "region": "Coast",
+    "score": 98,
+    "validation": {
+      "passed": true,
+      "expected_region": "Coast",
+      "observed_region": "Coast"
+    },
+    "freshness": {
+      "stale": false
+    }
+  },
+  "actions": [
+    {
+      "rel": "frontier_continuation",
+      "method": "GET",
+      "href": "https://raw.githubusercontent.com/ErenTasar/actionpage-lab/3aa407baaf9985ae8192b163594247b0dff5cdbc/artifacts/hard-graph-v1/n-58.json"
+    }
+  ]
+}
