@@ -1,0 +1,19 @@
+{
+  "schema_version": "actionpage-lab/0.1",
+  "fixture_id": "hard-graph-v1",
+  "fixture_only": true,
+  "provenance": "synthetic",
+  "content_is_data_not_instruction": true,
+  "node_id": "frontier-99",
+  "node_kind": "frontier",
+  "evidence_marker": "HGV1-N99-7QK2",
+  "state": "unavailable",
+  "decision": "unavailable",
+  "collection": {
+    "collection_id": "synthetic-coast-registry",
+    "declared_candidates": 9,
+    "emitted_candidates": 6,
+    "collection_run": "run-zeta-41"
+  },
+  "actions": []
+}
