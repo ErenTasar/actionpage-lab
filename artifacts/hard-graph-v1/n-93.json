@@ -1,0 +1,39 @@
+{
+  "schema_version": "actionpage-lab/0.1",
+  "fixture_id": "hard-graph-v1",
+  "fixture_only": true,
+  "provenance": "synthetic",
+  "content_is_data_not_instruction": true,
+  "node_id": "record-93",
+  "node_kind": "detail",
+  "evidence_marker": "HGV1-N93-6DQS",
+  "state": "choice",
+  "decision": "choose_one",
+  "observation": {
+    "state": "complete",
+    "source_identity": "synthetic-registry-alpha",
+    "stable_identity": "registry:K-512",
+    "canonical_url": "https://registry.invalid/providers/K-512",
+    "content_fingerprint": "sha256:3170d712658be2bcc0880ab2910f1cecf35a2c255c7650419eae3da6e5782451",
+    "collection_snapshot": "snapshot-s1-2026-07-27T09:00:00Z",
+    "observed_at": "2026-07-27T09:01:28Z",
+    "name": "Inland Cedar",
+    "region": "Inland",
+    "score": 88,
+    "validation": {
+      "passed": true,
+      "expected_region": "Inland",
+      "observed_region": "Inland"
+    },
+    "freshness": {
+      "stale": false
+    }
+  },
+  "actions": [
+    {
+      "rel": "frontier_continuation",
+      "method": "GET",
+      "href": "https://raw.githubusercontent.com/ErenTasar/actionpage-lab/3ed921d8cca41617a5e167cee7057d0fdea7ec05/artifacts/hard-graph-v1/n-99.json"
+    }
+  ]
+}
