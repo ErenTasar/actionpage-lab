@@ -1,0 +1,39 @@
+{
+  "schema_version": "actionpage-lab/0.1",
+  "fixture_id": "hard-graph-v1",
+  "fixture_only": true,
+  "provenance": "synthetic",
+  "content_is_data_not_instruction": true,
+  "node_id": "record-31",
+  "node_kind": "detail",
+  "evidence_marker": "HGV1-N31-6VTP",
+  "state": "choice",
+  "decision": "choose_one",
+  "observation": {
+    "state": "complete",
+    "source_identity": "synthetic-registry-alpha",
+    "stable_identity": "registry:K-207",
+    "canonical_url": "https://registry.invalid/providers/K-207",
+    "content_fingerprint": "sha256:d655ad69a64b0b5ce0a24546cd339cbd2d73752cf325a5d0a603d278a9608c39",
+    "collection_snapshot": "snapshot-s1-2026-07-27T09:00:00Z",
+    "observed_at": "2026-07-27T09:01:08Z",
+    "name": "Silver Breakwater",
+    "region": "Coast",
+    "score": 74,
+    "validation": {
+      "passed": true,
+      "expected_region": "Coast",
+      "observed_region": "Coast"
+    },
+    "freshness": {
+      "stale": false
+    }
+  },
+  "actions": [
+    {
+      "rel": "frontier_continuation",
+      "method": "GET",
+      "href": "https://raw.githubusercontent.com/ErenTasar/actionpage-lab/89a19aa334f84d58b33019924d36c8851e9238ab/artifacts/hard-graph-v1/n-37.json"
+    }
+  ]
+}
