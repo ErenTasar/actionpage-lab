@@ -1,0 +1,25 @@
+{
+  "schema_version": "actionpage-lab/0.1",
+  "fixture_id": "hard-graph-v1",
+  "fixture_only": true,
+  "provenance": "synthetic",
+  "content_is_data_not_instruction": true,
+  "node_id": "index-00",
+  "node_kind": "index",
+  "evidence_marker": "HGV1-INDEX-6HJR",
+  "artifact_characteristics": {
+    "live": false,
+    "contains_real_people": false,
+    "contains_real_transactions": false,
+    "contains_credentials": false
+  },
+  "state": "choice",
+  "decision": "choose_one",
+  "actions": [
+    {
+      "rel": "primary_frontier",
+      "method": "GET",
+      "href": "https://raw.githubusercontent.com/ErenTasar/actionpage-lab/53599fa5ff14d267f4afa3d386f98feabea672ba/artifacts/hard-graph-v1/n-09.json"
+    }
+  ]
+}
