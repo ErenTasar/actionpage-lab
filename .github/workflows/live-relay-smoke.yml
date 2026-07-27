@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 5
     env:
       BASE_URL: https://actionpage-origin-probe.pages.dev
-      BUILD_SHA256: c74c3f5303b68ab1c7ca35e31fe3a895c313e69044eae8ddaeffd40340211ba6
+      BUILD_SHA256: be5bd5328f79a37027d830686f765a887ec92955d4ecaa74470ba4d529e95381
     steps:
       - name: Fetch the machine entry point
         run: |
@@ -22,13 +22,17 @@ jobs:
             "$BASE_URL/" > root.json
           jq -e '
             .state == "choice" and
-            (.actions | length) == 2 and
+            (.actions | length) == 1 and
+            .actions[0].id == "mgm-forecast" and
+            .unavailable_operations[0].id == "rg-fihrist" and
+            .unavailable_operations[0].reason ==
+              "hosting_egress_quarantined" and
             .generic_proxy == false and
             .caller_chosen_egress == false
           ' root.json
           grep -Eiq '^cache-control:.*no-store' root.headers
 
-      - name: Validate the Resmi Gazete result
+      - name: Confirm the Resmi Gazete carrier quarantine
         continue-on-error: true
         run: |
           set -euo pipefail
@@ -37,17 +41,12 @@ jobs:
             --write-out '%{http_code}' \
             "$BASE_URL/r/rg-fihrist?date=2026-06-26" > rg.status
           cat rg.status
-          jq -e --arg build "$BUILD_SHA256" '
-            input_filename == "rg.json" and
-            .state == "complete" and
-            .validation.passed == true and
-            .validation.reason == "intent_matches_response" and
-            .result.date == "2026-06-26" and
-            .result.issue_number == 33292 and
-            (.result.items | length) >= 1 and
-            .receipt.network_requests == 1 and
-            .policy.implementation_sha256 == $build and
-            .policy.authorization == "allow"
+          jq -e '
+            .state == "unavailable" and
+            .validation.passed == false and
+            .validation.reason == "hosting_egress_quarantined" and
+            .result == null and
+            .receipt == null
           ' rg.json
 
       - name: Validate the MGM result
@@ -64,34 +63,12 @@ jobs:
             .validation.passed == true and
             .validation.reason == "intent_matches_response" and
             .result.location == "Bodrum" and
-            .result.province == "Muğla" and
+            .result.province == "Mu\u011fla" and
             (.result.days | length) == 5 and
             .receipt.network_requests == 2 and
             .policy.implementation_sha256 == $build and
             .policy.authorization == "allow"
           ' mgm.json
-
-      - name: Reject the valid-looking wrong-date response
-        continue-on-error: true
-        run: |
-          set -euo pipefail
-          status="$(
-            curl --silent --show-error \
-              --output rejected.json \
-              --write-out '%{http_code}' \
-              "$BASE_URL/r/rg-fihrist?date=1995-06-26"
-          )"
-          printf '%s' "$status" > rejected.status
-          test "$status" = "502"
-          jq -e --arg build "$BUILD_SHA256" '
-            .state == "unavailable" and
-            .validation.passed == false and
-            .result == null and
-            .receipt.network_requests == 1 and
-            .policy.implementation_sha256 == $build and
-            .policy.authorization == "deny" and
-            .policy.quarantined == true
-          ' rejected.json
 
       - name: Preserve the static origin marker
         run: |
@@ -109,10 +86,7 @@ jobs:
           set -euo pipefail
           printf 'RG status: %s\n' "$(cat rg.status)"
           printf 'MGM status: %s\n' "$(cat mgm.status)"
-          printf 'Rejected status: %s\n' "$(cat rejected.status)"
           jq -c '{state, reason: .validation.reason}' rg.json
           jq -c '{state, reason: .validation.reason}' mgm.json
-          jq -c '{state, reason: .validation.reason}' rejected.json
-          test "$(cat rg.status)" = "200"
+          test "$(cat rg.status)" = "503"
           test "$(cat mgm.status)" = "200"
-          test "$(cat rejected.status)" = "502"

@@ -40,18 +40,20 @@ history must be marked as contaminated in the experiment record.
 
 ## Live narrow proof
 
-The current live proof tests whether a standard web-fetch consumer can use two
-fixed, read-only web capabilities without an MCP server, browser automation,
-credentials, or caller-chosen egress. It is a deliberately narrow experiment,
-not the universal ActionPage product.
+The current live proof tests whether a standard web-fetch consumer can use a
+fixed, read-only web capability without an MCP server, browser automation,
+credentials, or caller-chosen egress. It also exposes one audited recipe that
+is deliberately quarantined on the current hosting carrier. This is a narrow
+experiment, not the universal ActionPage product.
 
 - [Machine entry point](https://actionpage-origin-probe.pages.dev/)
-- [Resmi Gazete index example](https://actionpage-origin-probe.pages.dev/r/rg-fihrist?date=2026-06-26)
 - [MGM five-day forecast example](https://actionpage-origin-probe.pages.dev/r/mgm-forecast?location=Bodrum)
-- [Intentional wrong-date rejection](https://actionpage-origin-probe.pages.dev/r/rg-fihrist?date=1995-06-26)
+- [Resmi Gazete carrier-quarantine example](https://actionpage-origin-probe.pages.dev/r/rg-fihrist?date=2026-06-26)
 - [Static origin probe](https://actionpage-origin-probe.pages.dev/probe.json)
 
-Every dynamic response is `no-store`, carries a fixed source-implementation
-digest, and either validates its result against the original intent or returns
-`state: "unavailable"` with `result: null`. The built-in recipes expire closed
-on 10 August 2026 unless they are revalidated and republished.
+The active dynamic response is `no-store`, carries a fixed
+source-implementation digest, and validates its result against the original
+intent. The Resmi Gazete recipe returns immediately with
+`state: "unavailable"` and `result: null` because its origin timed out from
+Cloudflare Pages in repeated external measurements. The built-in recipes
+expire closed on 10 August 2026 unless they are revalidated and republished.
