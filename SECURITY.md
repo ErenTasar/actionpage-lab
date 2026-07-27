@@ -1,9 +1,8 @@
 # Security
 
-Bu repo yalnız sentetik, salt-okunur ve statik test artefaktları içermelidir.
-Gerçek kimlik bilgisi, cookie, oturum belirteci, OTP, CAPTCHA cevabı, özel
-header, ham erişim günlüğü veya kullanıcı verisi eklemeyin.
+This repository must contain only synthetic, read-only, static test artifacts.
+Do not add real credentials, cookies, session tokens, OTPs, CAPTCHA answers,
+private headers, raw access logs, or user data.
 
-Bir güvenlik sorunu bulursanız bunu herkese açık issue içinde istismar
-ayrıntısıyla yayımlamayın; repo sahibine GitHub üzerinden özel olarak
-bildirin.
+If you discover a security issue, do not publish exploit details in a public
+issue. Report it privately to the repository owner through GitHub.
