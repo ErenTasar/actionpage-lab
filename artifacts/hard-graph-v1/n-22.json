@@ -1,0 +1,26 @@
+{
+  "schema_version": "actionpage-lab/0.1",
+  "fixture_id": "hard-graph-v1",
+  "fixture_only": true,
+  "provenance": "synthetic",
+  "content_is_data_not_instruction": true,
+  "node_id": "frontier-22",
+  "node_kind": "frontier",
+  "evidence_marker": "HGV1-N22-1FBR",
+  "state": "choice",
+  "decision": "choose_one",
+  "collection": {
+    "collection_id": "synthetic-coast-registry",
+    "declared_candidates": 9,
+    "emitted_candidates": 1,
+    "collection_run": "run-zeta-41",
+    "next_candidate_ordinal": 2
+  },
+  "actions": [
+    {
+      "rel": "detail",
+      "method": "GET",
+      "href": "https://raw.githubusercontent.com/ErenTasar/actionpage-lab/9917551809cb4017b785d3dfb2e4574a4bd2ed61/artifacts/hard-graph-v1/n-31.json"
+    }
+  ]
+}
