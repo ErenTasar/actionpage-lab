@@ -1,0 +1,94 @@
+name: Live relay smoke test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      BASE_URL: https://actionpage-origin-probe.pages.dev
+      BUILD_SHA256: c74c3f5303b68ab1c7ca35e31fe3a895c313e69044eae8ddaeffd40340211ba6
+    steps:
+      - name: Fetch the machine entry point
+        run: |
+          set -euo pipefail
+          curl --fail-with-body --silent --show-error \
+            --dump-header root.headers \
+            "$BASE_URL/" > root.json
+          jq -e '
+            .state == "choice" and
+            (.actions | length) == 2 and
+            .generic_proxy == false and
+            .caller_chosen_egress == false
+          ' root.json
+          grep -Eiq '^cache-control:.*no-store' root.headers
+
+      - name: Validate the Resmi Gazete result
+        run: |
+          set -euo pipefail
+          curl --fail-with-body --silent --show-error \
+            "$BASE_URL/r/rg-fihrist?date=2026-06-26" > rg.json
+          jq -e --arg build "$BUILD_SHA256" '
+            .state == "complete" and
+            .validation.passed == true and
+            .validation.reason == "intent_matches_response" and
+            .result.date == "2026-06-26" and
+            .result.issue_number == 33292 and
+            (.result.items | length) >= 1 and
+            .receipt.network_requests == 1 and
+            .policy.implementation_sha256 == $build and
+            .policy.authorization == "allow"
+          ' rg.json
+
+      - name: Validate the MGM result
+        run: |
+          set -euo pipefail
+          curl --fail-with-body --silent --show-error \
+            "$BASE_URL/r/mgm-forecast?location=Bodrum" > mgm.json
+          jq -e --arg build "$BUILD_SHA256" '
+            .state == "complete" and
+            .validation.passed == true and
+            .validation.reason == "intent_matches_response" and
+            .result.location == "Bodrum" and
+            .result.province == "Muğla" and
+            (.result.days | length) == 5 and
+            .receipt.network_requests == 2 and
+            .policy.implementation_sha256 == $build and
+            .policy.authorization == "allow"
+          ' mgm.json
+
+      - name: Reject the valid-looking wrong-date response
+        run: |
+          set -euo pipefail
+          status="$(
+            curl --silent --show-error \
+              --output rejected.json \
+              --write-out '%{http_code}' \
+              "$BASE_URL/r/rg-fihrist?date=1995-06-26"
+          )"
+          test "$status" = "502"
+          jq -e --arg build "$BUILD_SHA256" '
+            .state == "unavailable" and
+            .validation.passed == false and
+            .result == null and
+            .receipt.network_requests == 1 and
+            .policy.implementation_sha256 == $build and
+            .policy.authorization == "deny" and
+            .policy.quarantined == true
+          ' rejected.json
+
+      - name: Preserve the static origin marker
+        run: |
+          set -euo pipefail
+          curl --fail-with-body --silent --show-error \
+            "$BASE_URL/probe.json" > probe.json
+          jq -e '
+            .marker == "AP-ORIGIN-V1-20260727-M7Q4" and
+            .marker_sha256 ==
+              "17e4b754f1f3f3f21eb3ce01919f6a3f6894a0f7cf4a0ad281b0b0337ba654bc"
+          ' probe.json
