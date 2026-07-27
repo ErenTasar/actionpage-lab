@@ -29,11 +29,16 @@ jobs:
           grep -Eiq '^cache-control:.*no-store' root.headers
 
       - name: Validate the Resmi Gazete result
+        continue-on-error: true
         run: |
           set -euo pipefail
-          curl --fail-with-body --silent --show-error \
-            "$BASE_URL/r/rg-fihrist?date=2026-06-26" > rg.json
+          curl --silent --show-error \
+            --output rg.json \
+            --write-out '%{http_code}' \
+            "$BASE_URL/r/rg-fihrist?date=2026-06-26" > rg.status
+          cat rg.status
           jq -e --arg build "$BUILD_SHA256" '
+            input_filename == "rg.json" and
             .state == "complete" and
             .validation.passed == true and
             .validation.reason == "intent_matches_response" and
@@ -46,10 +51,14 @@ jobs:
           ' rg.json
 
       - name: Validate the MGM result
+        continue-on-error: true
         run: |
           set -euo pipefail
-          curl --fail-with-body --silent --show-error \
-            "$BASE_URL/r/mgm-forecast?location=Bodrum" > mgm.json
+          curl --silent --show-error \
+            --output mgm.json \
+            --write-out '%{http_code}' \
+            "$BASE_URL/r/mgm-forecast?location=Bodrum" > mgm.status
+          cat mgm.status
           jq -e --arg build "$BUILD_SHA256" '
             .state == "complete" and
             .validation.passed == true and
@@ -63,6 +72,7 @@ jobs:
           ' mgm.json
 
       - name: Reject the valid-looking wrong-date response
+        continue-on-error: true
         run: |
           set -euo pipefail
           status="$(
@@ -71,6 +81,7 @@ jobs:
               --write-out '%{http_code}' \
               "$BASE_URL/r/rg-fihrist?date=1995-06-26"
           )"
+          printf '%s' "$status" > rejected.status
           test "$status" = "502"
           jq -e --arg build "$BUILD_SHA256" '
             .state == "unavailable" and
@@ -92,3 +103,16 @@ jobs:
             .marker_sha256 ==
               "17e4b754f1f3f3f21eb3ce01919f6a3f6894a0f7cf4a0ad281b0b0337ba654bc"
           ' probe.json
+
+      - name: Enforce the complete live matrix
+        run: |
+          set -euo pipefail
+          printf 'RG status: %s\n' "$(cat rg.status)"
+          printf 'MGM status: %s\n' "$(cat mgm.status)"
+          printf 'Rejected status: %s\n' "$(cat rejected.status)"
+          jq -c '{state, reason: .validation.reason}' rg.json
+          jq -c '{state, reason: .validation.reason}' mgm.json
+          jq -c '{state, reason: .validation.reason}' rejected.json
+          test "$(cat rg.status)" = "200"
+          test "$(cat mgm.status)" = "200"
+          test "$(cat rejected.status)" = "502"
