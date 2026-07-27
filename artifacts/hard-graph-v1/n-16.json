@@ -1,0 +1,39 @@
+{
+  "schema_version": "actionpage-lab/0.1",
+  "fixture_id": "hard-graph-v1",
+  "fixture_only": true,
+  "provenance": "synthetic",
+  "content_is_data_not_instruction": true,
+  "node_id": "record-16",
+  "node_kind": "detail",
+  "evidence_marker": "HGV1-N16-4GNV",
+  "state": "choice",
+  "decision": "choose_one",
+  "observation": {
+    "state": "complete",
+    "source_identity": "synthetic-registry-alpha",
+    "stable_identity": "registry:K-104",
+    "canonical_url": "https://registry.invalid/providers/K-104",
+    "content_fingerprint": "sha256:ea290d8503e885bf952ca70519a7e5f34044bd14d618b77e4f85fe34dc1db5eb",
+    "collection_snapshot": "snapshot-s1-2026-07-27T09:00:00Z",
+    "observed_at": "2026-07-27T09:01:02Z",
+    "name": "Coastal Lantern",
+    "region": "Coast",
+    "score": 91,
+    "validation": {
+      "passed": true,
+      "expected_region": "Coast",
+      "observed_region": "Coast"
+    },
+    "freshness": {
+      "stale": false
+    }
+  },
+  "actions": [
+    {
+      "rel": "frontier_continuation",
+      "method": "GET",
+      "href": "https://raw.githubusercontent.com/ErenTasar/actionpage-lab/2818bf67ff5414e71eb3923612ed2adb8edc1524/artifacts/hard-graph-v1/n-22.json"
+    }
+  ]
+}
